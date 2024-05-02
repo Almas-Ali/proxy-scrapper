@@ -92,10 +92,14 @@ def run_sanitize_ips(input_file: str, output_file: str) -> None:
 def proxy_checker(proxy_ip: str, output_file: str) -> None:
     try:
         proxyDict: Dict[str, str] = {"http": proxy_ip, "https": proxy_ip}
-        requests.get("http://httpbin.org/ip", proxies=proxyDict, timeout=1)
-        with threading.Lock():
-            with open(output_file, "a") as f:
-                f.write(proxy_ip + "\n")
+        res: requests.Response = requests.get(
+            "http://httpbin.org/ip", proxies=proxyDict, timeout=2
+        )
+        if res.status_code == 200:
+            # print(f"Active Proxy: {proxy_ip}")
+            with threading.Lock():
+                with open(output_file, "a") as f:
+                    f.write(proxy_ip + "\n")
     except Exception:
         pass
 
