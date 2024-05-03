@@ -78,6 +78,9 @@ def sanitize_ips(file_path: str) -> List[str]:
             except TypeError:
                 sanitized_ips.append(match.group(1))
 
+    # duplicate removal
+    sanitized_ips = list(set(sanitized_ips))
+
     return sanitized_ips
 
 
